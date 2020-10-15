@@ -10,6 +10,8 @@ project(fortunemotors_driver)
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
+        tf
+        message_generation
         )
 
 ## System dependencies are found with CMake's conventions
