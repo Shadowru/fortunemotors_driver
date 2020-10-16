@@ -27,6 +27,7 @@ namespace fortunemotors_driver_node {
                 ROS_INFO("set wiringPi lib success !!! \r\n");
             }
 #endif
+            startRead();
         }
 
         void startRead(){
