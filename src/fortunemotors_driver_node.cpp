@@ -69,7 +69,7 @@ namespace fortunemotors_driver_node {
             }
 
             modbus_set_slave(mb, 2);
-            int rc = modbus_read_registers(mb, 64, 11, tab_reg);
+            rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
                 ROS_ERROR("NO data from MODBUS");
