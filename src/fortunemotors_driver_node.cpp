@@ -160,7 +160,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     float vl_speed_val = steps_per_mm * vr;
 
-    ROS_NFO("vl_speed_val %s", vl_speed_val);
+    ROS_INFO("vl_speed_val %s", vl_speed_val);
 
 }
 

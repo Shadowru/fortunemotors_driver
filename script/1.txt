@@ -3,3 +3,5 @@ roslaunch fortunemotors_driver fortune_motor.launch
 rostopic echo /fortunemotor_msg
 
 rostopic hz /fortunemotor_msg
+
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py /cmd_vel:=/cmd_vel
