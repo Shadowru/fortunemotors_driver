@@ -1,4 +1,4 @@
-roslaunch fortunemotors_driver fortunemotors_driver.launch
+roslaunch fortunemotors_driver fortune_motor.launch
 
 rostopic echo /fortunemotor_msg
 
