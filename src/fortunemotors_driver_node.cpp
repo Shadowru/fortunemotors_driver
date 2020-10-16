@@ -125,7 +125,7 @@ namespace fortunemotors_driver_node {
         void startRead() {
             mtx.lock();
 #ifdef __arm__
-            digitalWrite(EN_485,LOW);
+            //digitalWrite(EN_485,LOW);
 #endif
         }
 
@@ -136,7 +136,7 @@ namespace fortunemotors_driver_node {
         void startWrite() {
             mtx.lock();
 #ifdef __arm__
-            digitalWrite(EN_485,HIGH);
+            //digitalWrite(EN_485,HIGH);
 #endif
         }
 
