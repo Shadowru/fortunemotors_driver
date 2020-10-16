@@ -4,6 +4,7 @@
 #include <math.h>
 #include <exception>
 #include <thread>
+#include <mutex>
 
 #include <ros/ros.h>
 
