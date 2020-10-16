@@ -43,7 +43,6 @@ namespace fortunemotors_driver_node {
 
             //TODO: DEVICE_ID
             modbus_set_slave(mb, 1);
-            //std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
@@ -74,7 +73,6 @@ namespace fortunemotors_driver_node {
             }
 
             modbus_set_slave(mb, 2);
-            //std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             rc = modbus_read_registers(mb, 64, 11, tab_reg);
@@ -140,6 +138,8 @@ float wheel_radius;
 float wheel_circum;
 float rpm_per_meter;
 
+float steps_per_mm = 71.06;
+
 ros::Time current_time, last_time;
 
 void setInstance(fortunemotors_driver_node::Fortunemotor *instance) {
@@ -151,6 +151,16 @@ void velCallback(const geometry_msgs::Twist &vel) {
         return;
     }
 
+    float v = vel.linear.x;
+    float w = vel.angular.z;
+
+    // m per sec
+    float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
+    float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
+
+    float vl_speed_val = steps_per_mm * vr;
+
+    ROS_NFO("vl_speed_val %s", vl_speed_val);
 
 }
 
@@ -170,8 +180,8 @@ int main(int argc, char **argv) {
 
     node.param<std::string>("fortunemotors_uart", fortunemotors_uart, "/dev/ttyS0");
 
-    node.param<float>("base_width", base_width, 0.43);
-    node.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
+    node.param<float>("base_width", base_width, 0.40);
+    node.param<float>("wheel_radius", wheel_radius, 0.165 / 2);
 
     wheel_circum = 2.0 * wheel_radius * M_PI;
 
