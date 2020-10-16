@@ -61,8 +61,8 @@ namespace fortunemotors_driver_node {
             fortunemotors_driver::fortunemotor_msg msg;
 
             int idx = 0;
-            msg.V = tab_reg[idx++] + (tab_reg[idx++]<< 8);
-            msg.I = tab_reg[idx++] + (tab_reg[idx++]<< 8);
+            msg.V = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.I = (tab_reg[idx++]<< 8) + tab_reg[idx++];
 
             *error = false;
             return msg;
