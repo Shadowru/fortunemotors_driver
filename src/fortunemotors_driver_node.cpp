@@ -61,11 +61,11 @@ namespace fortunemotors_driver_node {
         }
 
         void set_motor_speed_PID_P(int device_id){
-            write_register(device_id, 13, 10);
+            write_register(device_id, 13, 100);
         }
 
         void set_motor_speed_PID_I(int device_id){
-            write_register(device_id, 12, 10);
+            write_register(device_id, 12, 100);
         }
 
         void write_register(int device_id, int register_id, int16_t value){
