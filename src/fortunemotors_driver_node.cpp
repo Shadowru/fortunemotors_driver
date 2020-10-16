@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
 
         tf::TransformBroadcaster odom_broadcaster;
 
-        bool hoverboard_error = false;
+        bool motor_error = false;
 
         //TODO: replace with rate
         int counter = 0;

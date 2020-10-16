@@ -1,5 +1,5 @@
 <launch>
-    <node name="fortunemotors_driver" pkg="hoverboard_driver" type="node" output="screen">
+    <node name="fortunemotors_driver" pkg="fortunemotors_driver" type="node" output="screen">
         <param name="fortunemotors_uart" value="/dev/ttyTHS1"/>
     </node>
 </launch>
