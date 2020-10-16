@@ -39,14 +39,20 @@ namespace fortunemotors_driver_node {
             //TODO: config
             startWrite();
             set_motor_mode(1, MODE_SPEED);
+            set_motor_current(1, 10*1000);
             set_motor_speed_PID_P(1);
             set_motor_speed_PID_I(1);
+
             set_motor_mode(2, MODE_SPEED);
+            set_motor_current(1, 10*1000);
             set_motor_speed_PID_P(2);
             set_motor_speed_PID_I(2);
             endWrite();
         }
 
+        void set_motor_current_limit(int device_id, int16_t current_limit){
+            write_register(device_id, 10, current_limit);
+        }
         void set_motor_mode(int device_id, int16_t mode){
             write_register(device_id, 0, mode);
         }
