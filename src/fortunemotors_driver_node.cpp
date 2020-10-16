@@ -41,9 +41,9 @@ namespace fortunemotors_driver_node {
 
             fortunemotors_driver::fortunemotor_msg msg;
 
-            modbus_flush(mb);
             //TODO: DEVICE_ID
             modbus_set_slave(mb, 1);
+            modbus_flush(mb);
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
@@ -71,8 +71,8 @@ namespace fortunemotors_driver_node {
                 msg.C1 = tab_reg[idx++];
             }
 
-            modbus_flush(mb);
             modbus_set_slave(mb, 2);
+            modbus_flush(mb);
             rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
