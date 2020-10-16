@@ -21,7 +21,7 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 
-#include "hoverboard_driver/serial.h"
+#include "fortunemotors_driver/serial.h"
 
 struct serial_handle {
     int fd;
