@@ -48,6 +48,8 @@ namespace fortunemotors_driver_node {
                 *error = true;
             } else {
 
+                int i = 0;
+
                 for (i=0; i < rc; i++) {
                     ROS_INFO("reg[%d]=%d (0x%X)\n", i, tab_reg[i], tab_reg[i]);
                 }
