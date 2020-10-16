@@ -16,4 +16,5 @@
 #include <nav_msgs/Odometry.h>
 
 #include "fortunemotors_driver/serial.h"
+#include "fortunemotors_driver/fortunemotor_msg.h"
 
