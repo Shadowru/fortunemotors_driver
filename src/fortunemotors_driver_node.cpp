@@ -46,7 +46,7 @@ namespace fortunemotors_driver_node {
 
         }
 
-        void readMotorState(bool *error) {
+        fortunemotors_driver::fortunemotor_msg read_motor_state(bool *error) {
             uint16_t tab_reg[32];
 
             startRead();
@@ -58,7 +58,14 @@ namespace fortunemotors_driver_node {
                 *error = true;
             }
 
+            fortunemotors_driver::fortunemotor_msg msg;
+
+            int idx = 0;
+            msg.V = tab_reg[idx++] + (tab_reg[idx++]<< 8);
+            msg.I = tab_reg[idx++] + (tab_reg[idx++]<< 8);
+
             *error = false;
+            return msg;
         }
 
 
@@ -108,8 +115,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     }
 }
 
-void readFortuneMotor() {
-
+void publish_message(ros::Publisher odrive_pub, hfortunemotors_driver::fortunemotor_msg msg) {
+    odrive_pub.publish(msg);
 }
 
 int main(int argc, char **argv) {
@@ -157,7 +164,13 @@ int main(int argc, char **argv) {
 
         while (ros::ok()) {
 
-            fortunemotors.readMotorState(&motor_error);
+            fortunemotors_driver::fortunemotor_msg feedback = fortunemotors.read_motor_state(&motor_error);
+
+            if(motor_error){
+
+            } else {
+                publish_feedback(fortunemotor_pub, feedback);
+            }
 
             ros::spinOnce();
             rate.sleep();
