@@ -1,13 +1,25 @@
 #Header header    # ROS Message header
 
-int16 	V
-int16 	I
-int16 	Temp
-int32 	Angle
-int16 	Speed
-int16 	VectAngle
-int16 	Vectpwm
-int16 	A
-int16 	B
-int16 	C
-int16 	error
+int16 	V1
+int16 	I1
+int16 	Temp1
+int32 	Angle1
+int16 	Speed1
+int16 	VectAngle1
+int16 	Vectpwm1
+int16 	A1
+int16 	B1
+int16 	C1
+int16 	error1
+
+int16 	V1
+int16 	I1
+int16 	Temp1
+int32 	Angle1
+int16 	Speed1
+int16 	VectAngle1
+int16 	Vectpwm1
+int16 	A1
+int16 	B1
+int16 	C1
+int16 	error1

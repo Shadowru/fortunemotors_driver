@@ -25,8 +25,6 @@ namespace fortunemotors_driver_node {
                 throw std::runtime_error("Unable to create the libmodbus context");
             }
 
-            //TODO: DEVICE_ID
-            modbus_set_slave(mb, 2);
             if (modbus_connect(mb) == -1) {
                 throw std::runtime_error("Connection failed");
                 close();
@@ -41,31 +39,61 @@ namespace fortunemotors_driver_node {
 
             fortunemotors_driver::fortunemotor_msg msg;
 
+            //TODO: DEVICE_ID
+            modbus_set_slave(mb, 1);
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
                 ROS_ERROR("NO data from MODBUS");
                 *error = true;
             } else {
-
+/*
                 int i = 0;
 
                 for (i=0; i < rc; i++) {
                     ROS_INFO("reg[%d]=%d (0x%X)", i, tab_reg[i], tab_reg[i]);
                 }
                 ROS_INFO("\n");
-
+*/
                 int idx = 0;
-                msg.V = tab_reg[idx++];
-                msg.I = tab_reg[idx++];
-                msg.Temp = tab_reg[idx++];
-                msg.Angle =  tab_reg[idx++] + (tab_reg[idx++] << 16);
-                msg.Speed = tab_reg[idx++];
-                msg.VectAngle = tab_reg[idx++];
-                msg.Vectpwm = tab_reg[idx++];
-                msg.A = tab_reg[idx++];
-                msg.B = tab_reg[idx++];
-                msg.C = tab_reg[idx++];
+                msg.V1 = tab_reg[idx++];
+                msg.I1 = tab_reg[idx++];
+                msg.Temp1 = tab_reg[idx++];
+                msg.Angle1 =  tab_reg[idx++] + (tab_reg[idx++] << 16);
+                msg.Speed1 = tab_reg[idx++];
+                msg.VectAngle1 = tab_reg[idx++];
+                msg.Vectpwm1 = tab_reg[idx++];
+                msg.A1 = tab_reg[idx++];
+                msg.B1 = tab_reg[idx++];
+                msg.C1 = tab_reg[idx++];
+            }
+
+            modbus_set_slave(mb, 2);
+            int rc = modbus_read_registers(mb, 64, 11, tab_reg);
+
+            if (rc == -1) {
+                ROS_ERROR("NO data from MODBUS");
+                *error = true;
+            } else {
+/*
+                int i = 0;
+
+                for (i=0; i < rc; i++) {
+                    ROS_INFO("reg[%d]=%d (0x%X)", i, tab_reg[i], tab_reg[i]);
+                }
+                ROS_INFO("\n");
+*/
+                int idx = 0;
+                msg.V2 = tab_reg[idx++];
+                msg.I2 = tab_reg[idx++];
+                msg.Temp2 = tab_reg[idx++];
+                msg.Angle2 =  tab_reg[idx++] + (tab_reg[idx++] << 16);
+                msg.Speed2 = tab_reg[idx++];
+                msg.VectAngle2 = tab_reg[idx++];
+                msg.Vectpwm2 = tab_reg[idx++];
+                msg.A2 = tab_reg[idx++];
+                msg.B2 = tab_reg[idx++];
+                msg.C2 = tab_reg[idx++];
             }
 
             *error = false;
