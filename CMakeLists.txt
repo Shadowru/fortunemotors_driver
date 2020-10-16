@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(
         FILES
-        #hoverboard_msg.msg
+        fortunemotor_msg.msg
 )
 
 generate_messages(
