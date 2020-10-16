@@ -40,14 +40,14 @@ namespace fortunemotors_driver_node {
             startWrite();
             set_motor_mode(1, MODE_SPEED);
             set_motor_current_limit(1, 10*1000);
-            set_motor_speed_PID_P(1);
-            set_motor_speed_PID_I(1);
+            set_motor_speed_PID_P(1, 100);
+            set_motor_speed_PID_I(1, 100);
 
             set_motor_mode(2, MODE_SPEED);
             set_motor_current_limit(1, 10*1000);
-            set_motor_speed_PID_P(2);
-            set_motor_speed_PID_I(2);
-            endWrite();
+            set_motor_speed_PID_P(2, 100);
+            set_motor_speed_PID_I(2, 100);
+            stopWrite();
         }
 
         void set_motor_current_limit(int device_id, int16_t current_limit){
@@ -60,12 +60,12 @@ namespace fortunemotors_driver_node {
             write_register(device_id, 3, speed);
         }
 
-        void set_motor_speed_PID_P(int device_id){
-            write_register(device_id, 13, 100);
+        void set_motor_speed_PID_P(int device_id, int p_val){
+            write_register(device_id, 13, p_val);
         }
 
-        void set_motor_speed_PID_I(int device_id){
-            write_register(device_id, 12, 100);
+        void set_motor_speed_PID_I(int device_id, int i_val){
+            write_register(device_id, 12, i_val);
         }
 
         void write_register(int device_id, int register_id, int16_t value){
@@ -184,7 +184,7 @@ namespace fortunemotors_driver_node {
 #endif
         }
 
-        void endWrite(){
+        void stopWrite(){
             mtx.unlock();
         }
 
@@ -246,7 +246,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     fortunemotors_instance->startWrite();
     fortunemotors_instance->set_motor_speed(1, static_cast<int16_t>(vl_speed_val));
     fortunemotors_instance->set_motor_speed(2, static_cast<int16_t>(-1 * vr_speed_val));
-    fortunemotors_instance->endWrite();
+    fortunemotors_instance->stopWrite();
 
 }
 
@@ -332,7 +332,22 @@ int main(int argc, char **argv) {
     rpm_per_meter = 1 / wheel_circum;
 
     try {
+
+        float p_speed_val;
+        float i_speed_val;
+
+        node.param<int>("p_speed", p_speed_val, 100);
+        node.param<int>("i_speed", i_speed_val, 100);
+
         fortunemotors_driver_node::Fortunemotor fortunemotors(fortunemotors_uart);
+
+        fortunemotors.startWrite();
+        fortunemotors.set_motor_speed_PID_P(1, p_speed_val);
+        fortunemotors.set_motor_speed_PID_I(1, i_speed_val);
+
+        fortunemotors.set_motor_speed_PID_P(2, p_speed_val);
+        fortunemotors.set_motor_speed_PID_I(2, i_speed_val);
+        fortunemotors.stopWrite();
 
         setInstance(&fortunemotors);
 
