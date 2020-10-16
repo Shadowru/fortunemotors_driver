@@ -115,7 +115,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     }
 }
 
-void publish_message(ros::Publisher odrive_pub, hfortunemotors_driver::fortunemotor_msg msg) {
+void publish_feedback(ros::Publisher odrive_pub, hfortunemotors_driver::fortunemotor_msg msg) {
     odrive_pub.publish(msg);
 }
 
