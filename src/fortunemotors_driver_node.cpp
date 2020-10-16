@@ -26,9 +26,9 @@ namespace fortunemotors_driver_node {
             } else {
                 ROS_INFO("set wiringPi lib success !!! \r\n");
             }
+            pinMode(EN_485, OUTPUT);
 #endif
             startRead();
-
 
             mb = modbus_new_rtu(serial_name.c_str(), 115200, 'N', 8, 1);
 
@@ -46,16 +46,30 @@ namespace fortunemotors_driver_node {
 
         }
 
-        void startRead(){
+        void readMotorState(bool *error) {
+            uint16_t tab_reg[32];
+
+            startRead();
+
+            int rc = modbus_read_registers(mb, 64, 11, tab_reg);
+
+            if (rc == -1) {
+                ROS_ERROR("NO data from MODBUS");
+                *error = true;
+            }
+
+            *error = false;
+        }
+
+
+        void startRead() {
 #ifdef __arm__
-            pinMode(EN_485, OUTPUT);
             digitalWrite(EN_485,LOW);
 #endif
         }
 
-        void startWrite(){
+        void startWrite() {
 #ifdef __arm__
-            pinMode(EN_485, OUTPUT);
             digitalWrite(EN_485,HIGH);
 #endif
         }
@@ -63,6 +77,7 @@ namespace fortunemotors_driver_node {
         void close() {
 //            serial_close(serial_);
             serial_free(serial_);
+            modbus_close(mb);
             modbus_free(mb);
         };
 
@@ -88,9 +103,13 @@ void setInstance(fortunemotors_driver_node::Fortunemotor *instance) {
 }
 
 void velCallback(const geometry_msgs::Twist &vel) {
-    if(fortunemotors_instance == NULL){
+    if (fortunemotors_instance == NULL) {
         return;
     }
+}
+
+void readFortuneMotor() {
+
 }
 
 int main(int argc, char **argv) {
@@ -122,7 +141,8 @@ int main(int argc, char **argv) {
         current_time = ros::Time::now();
         last_time = ros::Time::now();
 
-        ros::Publisher fortunemotor_pub = node.advertise<fortunemotors_driver::fortunemotor_msg>("fortunemotor_msg", 20);
+        ros::Publisher fortunemotor_pub = node.advertise<fortunemotors_driver::fortunemotor_msg>("fortunemotor_msg",
+                                                                                                 20);
 
         ros::Publisher fortunemotor_odometry = node.advertise<nav_msgs::Odometry>("odometry", 20);
 
@@ -136,6 +156,9 @@ int main(int argc, char **argv) {
         int counter = 0;
 
         while (ros::ok()) {
+
+            fortunemotors.readMotorState();
+
             ros::spinOnce();
             rate.sleep();
         }
