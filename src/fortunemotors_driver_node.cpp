@@ -21,6 +21,8 @@ namespace fortunemotors_driver_node {
 
             mb = modbus_new_rtu(serial_name.c_str(), 115200, 'N', 8, 1);
 
+            modbus_rtu_set_serial_mode(mb, MODBUS_RTU_RS485);
+
             if (mb == NULL) {
                 throw std::runtime_error("Unable to create the libmodbus context");
             }
@@ -39,6 +41,7 @@ namespace fortunemotors_driver_node {
 
             fortunemotors_driver::fortunemotor_msg msg;
 
+            modbus_flush(mb);
             //TODO: DEVICE_ID
             modbus_set_slave(mb, 1);
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
@@ -68,6 +71,7 @@ namespace fortunemotors_driver_node {
                 msg.C1 = tab_reg[idx++];
             }
 
+            modbus_flush(mb);
             modbus_set_slave(mb, 2);
             rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
