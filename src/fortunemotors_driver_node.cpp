@@ -21,6 +21,18 @@ namespace fortunemotors_driver_node {
             serial_input_waiting(serial_, &buffer_size);
              */
 
+#ifdef __arm__
+            if(wiringPiSetupGpio() < 0) { //use BCM2835 Pin number table
+                printf("set wiringPi lib failed !!! \r\n");
+                return -1;
+            } else {
+                printf("set wiringPi lib success !!! \r\n");
+            }
+
+            pinMode(EN_485, OUTPUT);
+
+            digitalWrite(EN_485,HIGH);
+#endif
         }
 
         void close() {
@@ -45,7 +57,7 @@ float rpm_per_meter;
 
 ros::Time current_time, last_time;
 
-void setInstance(fortunemotors_driver_node::Fortunemotor *instance){
+void setInstance(fortunemotors_driver_node::Fortunemotor *instance) {
     fortunemotors_instance = instance;
 }
 
