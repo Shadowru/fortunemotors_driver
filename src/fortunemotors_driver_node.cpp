@@ -23,7 +23,7 @@ namespace fortunemotors_driver_node {
 
 #ifdef __arm__
             if(wiringPiSetupGpio() < 0) { //use BCM2835 Pin number table
-                throw std::exception("set wiringPi lib failed");
+                throw std::runtime_error("set wiringPi lib failed");
             } else {
                 ROS_INFO("set wiringPi lib success !!! \r\n");
             }
@@ -60,7 +60,11 @@ void setInstance(fortunemotors_driver_node::Fortunemotor *instance) {
     fortunemotors_instance = instance;
 }
 
-fortunemotors_driver_node::Fortunemotor fortunemotors;
+void velCallback(const geometry_msgs::Twist &vel) {
+    if(fortunemotors_instance == NULL){
+        return;
+    }
+}
 
 int main(int argc, char **argv) {
     // Start ROS node.
