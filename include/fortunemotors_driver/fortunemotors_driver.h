@@ -4,7 +4,7 @@
 #include <math.h>
 #include <ros/ros.h>
 
-#include <modbus.h>
+#include <modbus/modbus.h>
 
 #include <geometry_msgs/Twist.h>
 #include <tf/transform_broadcaster.h>
