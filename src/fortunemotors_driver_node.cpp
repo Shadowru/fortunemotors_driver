@@ -51,26 +51,27 @@ namespace fortunemotors_driver_node {
 
             startRead();
 
+            fortunemotors_driver::fortunemotor_msg msg;
+
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
                 ROS_ERROR("NO data from MODBUS");
                 *error = true;
+            } else {
+
+                int idx = 0;
+                msg.V = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.I = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.Temp = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.Angle = (tab_reg[idx++] << 24) + (tab_reg[idx++] << 16) + (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.Speed = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.VectAngle = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.Vectpwm = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.A = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.B = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.C = (tab_reg[idx++] << 8) + tab_reg[idx++];
             }
-
-            fortunemotors_driver::fortunemotor_msg msg;
-
-            int idx = 0;
-            msg.V = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.I = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.Temp = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.Angle = (tab_reg[idx++]<< 24) + (tab_reg[idx++]<< 16) + (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.Speed = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.VectAngle = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.Vectpwm = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.A = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.B = (tab_reg[idx++]<< 8) + tab_reg[idx++];
-            msg.C = (tab_reg[idx++]<< 8) + tab_reg[idx++];
 
             *error = false;
             return msg;
