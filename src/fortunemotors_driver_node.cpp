@@ -20,16 +20,25 @@ namespace fortunemotors_driver_node {
             buffer_size = 50;
             serial_input_waiting(serial_, &buffer_size);
              */
-
 #ifdef __arm__
             if(wiringPiSetupGpio() < 0) { //use BCM2835 Pin number table
                 throw std::runtime_error("set wiringPi lib failed");
             } else {
                 ROS_INFO("set wiringPi lib success !!! \r\n");
             }
+#endif
+        }
 
+        void startRead(){
+#ifdef __arm__
             pinMode(EN_485, OUTPUT);
+            digitalWrite(EN_485,LOW);
+#endif
+        }
 
+        void startWrite(){
+#ifdef __arm__
+            pinMode(EN_485, OUTPUT);
             digitalWrite(EN_485,HIGH);
 #endif
         }
