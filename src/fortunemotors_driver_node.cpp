@@ -49,9 +49,20 @@ namespace fortunemotors_driver_node {
         void set_motor_speed(int device_id, int16_t speed){
             write_register(device_id, 3, speed);
         }
+
+        void set_motor_speed_PID_P(device_id){
+            write_register(device_id, 13, 100);
+        }
+
+        void set_motor_speed_PID_I(device_id){
+            write_register(device_id, 12, 100);
+        }
+
         void write_register(int device_id, int register_id, int16_t value){
+            modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_set_slave(mb, device_id);
+            std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
 
