@@ -60,6 +60,7 @@ void setInstance(fortunemotors_driver_node::Fortunemotor *instance) {
     fortunemotors_instance = instance;
 }
 
+fortunemotors_driver_node::Fortunemotor fortunemotors;
 
 int main(int argc, char **argv) {
     // Start ROS node.
@@ -73,15 +74,6 @@ int main(int argc, char **argv) {
 
     node.param<std::string>("fortunemotors_uart", fortunemotors_uart, "/dev/ttyS0");
 
-    try {
-        fortunemotors_driver_node::Fortunemotor fortunemotors(fortunemotors_uart);
-    } catch (const std::exception& err) {
-        //ROS_ERROR("set wiringPi lib failed !!! \r\n");
-        ROS_ERROR("Init exc : %s", err.what());
-    }
-
-    setInstance(&fortunemotors);
-
     node.param<float>("base_width", base_width, 0.43);
     node.param<float>("wheel_radius", wheel_radius, 0.235 / 2);
 
@@ -91,27 +83,37 @@ int main(int argc, char **argv) {
 
     ROS_INFO("rpm_per_meter : %f", rpm_per_meter);
 
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
+    try {
+        fortunemotors_driver_node::Fortunemotor fortunemotors(fortunemotors_uart);
 
-    ros::Publisher fortunemotor_pub = node.advertise<hoverboard_driver::hoverboard_msg>("hoverboard_msg", 20);
+        setInstance(&fortunemotors);
 
-    ros::Publisher fortunemotor_odometry = node.advertise<nav_msgs::Odometry>("odometry", 20);
+        current_time = ros::Time::now();
+        last_time = ros::Time::now();
 
-    ros::Subscriber fortunemotor_cmd_vel = node.subscribe("cmd_vel", 10, velCallback);
+        ros::Publisher fortunemotor_pub = node.advertise<hoverboard_driver::hoverboard_msg>("hoverboard_msg", 20);
 
-    tf::TransformBroadcaster odom_broadcaster;
+        ros::Publisher fortunemotor_odometry = node.advertise<nav_msgs::Odometry>("odometry", 20);
 
-    bool hoverboard_error = false;
+        ros::Subscriber fortunemotor_cmd_vel = node.subscribe("cmd_vel", 10, velCallback);
 
-    //TODO: replace with rate
-    int counter = 0;
+        tf::TransformBroadcaster odom_broadcaster;
 
-    while (ros::ok()) {
-        ros::spinOnce();
-        rate.sleep();
+        bool hoverboard_error = false;
+
+        //TODO: replace with rate
+        int counter = 0;
+
+        while (ros::ok()) {
+            ros::spinOnce();
+            rate.sleep();
+        }
+
+        fortunemotors.close();
+    } catch (const std::exception &err) {
+        //ROS_ERROR("set wiringPi lib failed !!! \r\n");
+        ROS_ERROR("Init exc : %s", err.what());
+        return -1;
     }
-
-    fortunemotors.close();
 
 }
