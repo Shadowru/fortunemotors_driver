@@ -44,7 +44,7 @@ namespace fortunemotors_driver_node {
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
-                ROS_ERROR("NO data from MODBUS");
+                ROS_ERROR("NO data from MODBUS Slave 1");
                 *error = true;
             } else {
 /*
@@ -72,7 +72,7 @@ namespace fortunemotors_driver_node {
             rc = modbus_read_registers(mb, 64, 11, tab_reg);
 
             if (rc == -1) {
-                ROS_ERROR("NO data from MODBUS");
+                ROS_ERROR("NO data from MODBUS slave 2");
                 *error = true;
             } else {
 /*
