@@ -63,6 +63,14 @@ namespace fortunemotors_driver_node {
             int idx = 0;
             msg.V = (tab_reg[idx++]<< 8) + tab_reg[idx++];
             msg.I = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.Temp = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.Angle = (tab_reg[idx++]<< 24) + (tab_reg[idx++]<< 16) + (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.Speed = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.VectAngle = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.Vectpwm = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.A = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.B = (tab_reg[idx++]<< 8) + tab_reg[idx++];
+            msg.C = (tab_reg[idx++]<< 8) + tab_reg[idx++];
 
             *error = false;
             return msg;
