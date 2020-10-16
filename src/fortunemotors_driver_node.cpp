@@ -4,6 +4,12 @@
 #define EN_485 18
 #endif
 
+#define MODE_ANGLE 1
+#define MODE_SPEED 2
+#define MODE_PWM 3
+#define MODE_MANUAL 4
+#define MODE_NONE 0
+
 namespace fortunemotors_driver_node {
 
     class Fortunemotor {
@@ -30,20 +36,31 @@ namespace fortunemotors_driver_node {
                 close();
             }
 
+            //TODO: config
+            startWrite();
+            set_motor_mode(1, MODE_SPEED);
+            set_motor_mode(2, MODE_SPEED);
+            endWrite();
         }
 
+        void set_motor_mode(int device_id, int16_t mode){
+            write_register(device_id, 0, mode);
+        }
         void set_motor_speed(int device_id, int16_t speed){
+            write_register(device_id, 3, speed);
+        }
+        void write_register(int device_id, int register_id, int16_t value){
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_set_slave(mb, device_id);
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
 
-            ROS_INFO("Set speed :%d for device %d", speed, device_id);
+            ROS_INFO("Set register %d - value :%d for device %d", register_id, value, device_id);
 
-            int res = modbus_write_register(mb, 3, speed);
+            int res = modbus_write_register(mb, register_id, value);
 
             if(res < 0){
-                ROS_ERROR("Error write speed to modbus device %d", device_id);
+                ROS_ERROR("Error write value to modbus device %d", device_id);
             }
         }
 
