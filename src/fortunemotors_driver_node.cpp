@@ -212,6 +212,15 @@ float steps_per_mm = 71.06;
 
 ros::Time current_time, last_time;
 
+float right_pos;
+float left_pos;
+
+ros::Time current_time, last_time;
+
+float global_x;
+float global_y;
+float global_theta;
+
 void setInstance(fortunemotors_driver_node::Fortunemotor *instance) {
     fortunemotors_instance = instance;
 }
@@ -241,6 +250,64 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
 }
 
+void publishOdometry(ros::Publisher odometry_pub, const fortunemotors_driver::fortunemotor_msg fortunemotor_msg,
+                     tf::TransformBroadcaster odom_broadcaster, const ros::Time current_time,
+                     const ros::Time last_time) {
+    float curr_tick_right = fortunemotor_msg.Angle2;
+    float curr_tick_left = fortunemotor_msg.Angle1;
+
+    float curr_right_pos = curr_tick_right - right_pos;
+    float curr_left_pos = -1.0 * (curr_tick_left - left_pos);
+
+    right_pos = curr_tick_right;
+    left_pos = curr_tick_left;
+
+    float delta_right_wheel_in_meter = curr_right_pos / steps_per_mm;
+    float delta_left_wheel_in_meter = curr_left_pos / steps_per_mm;
+
+    float local_theta = (delta_right_wheel_in_meter - delta_left_wheel_in_meter) / base_width;
+
+    float distance = (delta_right_wheel_in_meter + delta_left_wheel_in_meter) / 2;
+
+    ros::Duration ros_time_elapsed = current_time - last_time;
+    float time_elapsed = ros_time_elapsed.toSec();
+
+    float local_x = cos(global_theta) * distance;
+    float local_y = -sin(global_theta) * distance;
+
+    global_x = global_x + (cos(global_theta) * local_x - sin(global_theta) * local_y);
+    global_y = global_y + (sin(global_theta) * local_x + cos(global_theta) * local_y);
+
+    global_theta += local_theta;
+
+    //global_theta = math.atan2(math.sin(global_theta), math.cos(global_theta));
+
+    tf::Quaternion quaternion;
+    quaternion.setRPY(0, 0, global_theta);
+
+    ros::Time now_time = ros::Time::now();
+
+    tf::Transform transform;
+    transform.setOrigin(tf::Vector3(global_x, global_y, 0.0));
+    transform.setRotation(quaternion);
+
+    odom_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", "odom"));
+
+    nav_msgs::Odometry odom;
+    odom.header.stamp = now_time;
+    odom.header.frame_id = "odom";
+    odom.pose.pose.position.x = global_x;
+    odom.pose.pose.position.y = global_y;
+    odom.pose.pose.position.z = 0;
+    odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(global_theta);
+    odom.child_frame_id = "base_link";
+    odom.twist.twist.linear.x = distance / time_elapsed;
+    odom.twist.twist.linear.y = 0;
+    odom.twist.twist.angular.z = local_theta / time_elapsed;
+    odometry_pub.publish(odom);
+
+}
+
 void publish_feedback(ros::Publisher odrive_pub, fortunemotors_driver::fortunemotor_msg msg) {
     odrive_pub.publish(msg);
 }
@@ -264,8 +331,6 @@ int main(int argc, char **argv) {
 
     rpm_per_meter = 1 / wheel_circum;
 
-    ROS_INFO("rpm_per_meter : %f", rpm_per_meter);
-
     try {
         fortunemotors_driver_node::Fortunemotor fortunemotors(fortunemotors_uart);
 
@@ -276,7 +341,6 @@ int main(int argc, char **argv) {
 
         ros::Publisher fortunemotor_pub = node.advertise<fortunemotors_driver::fortunemotor_msg>("fortunemotor_msg",
                                                                                                  20);
-
         ros::Publisher fortunemotor_odometry = node.advertise<nav_msgs::Odometry>("odometry", 20);
 
         ros::Subscriber fortunemotor_cmd_vel = node.subscribe("cmd_vel", 10, velCallback);
@@ -288,11 +352,33 @@ int main(int argc, char **argv) {
         //TODO: replace with rate
         int counter = 0;
 
+        ROS_INFO("rpm_per_meter : %f", rpm_per_meter);
+
+        current_time = ros::Time::now();
+        last_time = ros::Time::now();
+
+        ROS_INFO("Init odometry");
+
+        fortunemotors_driver::fortunemotor_msg feedback = fortunemotors.read_motor_state(&motor_error);
+
+        //TODO:function
+        right_pos = static_cast<int16_t>(fortunemotor_msg.Angle2);
+        left_pos = static_cast<int16_t>(fortunemotor_msg.Angle1);
+
+        //TODO : read from params
+        global_x = 0;
+        global_y = 0;
+        global_theta = 0;
+
+
         while (ros::ok()) {
 
             fortunemotors_driver::fortunemotor_msg feedback = fortunemotors.read_motor_state(&motor_error);
 
             publish_feedback(fortunemotor_pub, feedback);
+
+            publishOdometry(odrive_odometry, feedback, odom_broadcaster, current_time, last_time);
+            last_time = current_time;
 
             ros::spinOnce();
             rate.sleep();
