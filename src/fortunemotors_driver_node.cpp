@@ -119,5 +119,5 @@ int main(int argc, char **argv) {
         ROS_ERROR("Init exc : %s", err.what());
         return -1;
     }
-
+    return 0;
 }
