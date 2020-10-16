@@ -30,7 +30,7 @@ namespace fortunemotors_driver_node {
             startRead();
 
 
-            mb = modbus_new_rtu(serial_name, 115200, 'N', 8, 1);
+            mb = modbus_new_rtu(serial_name.c_str(), 115200, 'N', 8, 1);
 
             if (mb == NULL) {
                 throw std::runtime_error("Unable to create the libmodbus context");
