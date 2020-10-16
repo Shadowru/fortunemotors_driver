@@ -229,8 +229,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     ROS_INFO("vr_speed_val %f", vr_speed_val);
 
     fortunemotors_instance->startWrite();
-    fortunemotors_instance->set_motor_speed(1, static_cast<int16_t>(vl_speed_val));
     fortunemotors_instance->set_motor_speed(2, static_cast<int16_t>(vr_speed_val));
+    fortunemotors_instance->set_motor_speed(1, static_cast<int16_t>(vl_speed_val));
     fortunemotors_instance->endWrite();
 
 }
