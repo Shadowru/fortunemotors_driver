@@ -43,7 +43,7 @@ namespace fortunemotors_driver_node {
 
             //TODO: DEVICE_ID
             modbus_set_slave(mb, 1);
-            std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
+            //std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             int rc = modbus_read_registers(mb, 64, 11, tab_reg);
@@ -74,7 +74,7 @@ namespace fortunemotors_driver_node {
             }
 
             modbus_set_slave(mb, 2);
-            std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
+            //std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             rc = modbus_read_registers(mb, 64, 11, tab_reg);
