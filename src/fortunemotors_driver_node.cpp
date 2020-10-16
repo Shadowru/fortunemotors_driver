@@ -32,14 +32,14 @@ namespace fortunemotors_driver_node {
 
             mb = modbus_new_rtu(serial_name, 115200, 'N', 8, 1);
 
-            if (ctx == NULL) {
+            if (mb == NULL) {
                 throw std::runtime_error("Unable to create the libmodbus context");
             }
 
 
             //TODO: DEVICE_ID
-            modbus_set_slave(ctx, 2);
-            if (modbus_connect(ctx) == -1) {
+            modbus_set_slave(mb, 2);
+            if (modbus_connect(mb) == -1) {
                 throw std::runtime_error("Connection failed");
                 close();
             }
