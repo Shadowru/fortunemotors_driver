@@ -1,7 +1,7 @@
 #include "fortunemotors_driver/fortunemotors_driver.h"
 
 #ifdef __arm__
-#define EN_485 18
+#define EN_485 4
 #endif
 
 namespace fortunemotors_driver_node {
