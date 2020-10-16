@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
         current_time = ros::Time::now();
         last_time = ros::Time::now();
 
-        ros::Publisher fortunemotor_pub = node.advertise<hoverboard_driver::hoverboard_msg>("hoverboard_msg", 20);
+        ros::Publisher fortunemotor_pub = node.advertise<fortunemotors_driver::fortunemotor_msg>("fortunemotor_msg", 20);
 
         ros::Publisher fortunemotor_odometry = node.advertise<nav_msgs::Odometry>("odometry", 20);
 
