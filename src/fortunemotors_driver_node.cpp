@@ -17,8 +17,6 @@ namespace fortunemotors_driver_node {
             }
             pinMode(EN_485, OUTPUT);
 #endif
-            startRead();
-
             mb = modbus_new_rtu(serial_name.c_str(), 115200, 'N', 8, 1);
 
             modbus_rtu_set_serial_mode(mb, MODBUS_RTU_RS485);
@@ -115,20 +113,32 @@ namespace fortunemotors_driver_node {
             }
 
             *error = false;
+            stopRead();
+
             return msg;
         }
 
 
         void startRead() {
+            mtx.lock();
 #ifdef __arm__
             digitalWrite(EN_485,LOW);
 #endif
         }
 
+        void stopRead() {
+            mtx.unlock();
+        }
+
         void startWrite() {
+            mtx.lock();
 #ifdef __arm__
             digitalWrite(EN_485,HIGH);
 #endif
+        }
+
+        void endWrite(){
+            mtx.unlock();
         }
 
         void close() {
@@ -139,6 +149,7 @@ namespace fortunemotors_driver_node {
     private:
         std::string serial_name_;
         modbus_t *mb;
+        std::mutex mtx;
     };
 
 }
@@ -176,8 +187,10 @@ void velCallback(const geometry_msgs::Twist &vel) {
     ROS_INFO("vl_speed_val %f", vl_speed_val);
     ROS_INFO("vr_speed_val %f", vr_speed_val);
 
+    fortunemotors_instance->startWrite();
     fortunemotors_instance->set_motor_speed(1, static_cast<int16_t>(vl_speed_val));
     fortunemotors_instance->set_motor_speed(2, static_cast<int16_t>(vr_speed_val));
+    fortunemotors_instance->endWrite();
 
 }
 
