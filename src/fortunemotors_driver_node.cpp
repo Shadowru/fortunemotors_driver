@@ -158,7 +158,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
     float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
-    float vl_speed_val = steps_per_mm * vr;
+    float vl_speed_val = (steps_per_mm * vr) / 100;
 
     ROS_INFO("vl_speed_val %f", vl_speed_val);
 
