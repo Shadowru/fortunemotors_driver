@@ -38,7 +38,7 @@ namespace fortunemotors_driver_node {
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
 
-            ROS_INFO("Set speed :d for device %d", speed, device_id);
+            ROS_INFO("Set speed :%d for device %d", speed, device_id);
 
             int res = modbus_write_register(mb, 3, speed);
 
