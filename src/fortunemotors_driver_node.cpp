@@ -35,7 +35,7 @@ namespace fortunemotors_driver_node {
         }
 
         fortunemotors_driver::fortunemotor_msg read_motor_state(bool *error) {
-            uint16_t tab_reg[32];
+            uint16_t tab_reg[64];
 
             startRead();
 
@@ -47,6 +47,10 @@ namespace fortunemotors_driver_node {
                 ROS_ERROR("NO data from MODBUS");
                 *error = true;
             } else {
+
+                for (i=0; i < rc; i++) {
+                    ROS_INFO("reg[%d]=%d (0x%X)\n", i, tab_reg[i], tab_reg[i]);
+                }
 
                 int idx = 0;
                 msg.V = tab_reg[idx++] + (tab_reg[idx++] << 8);
@@ -122,7 +126,7 @@ int main(int argc, char **argv) {
 
     ros::init(argc, argv, "fortunemotors_driver");
     ros::NodeHandle node;
-    ros::Rate rate(50);  // 50 hz
+    ros::Rate rate(1);  // 50 hz
 
     std::string fortunemotors_uart;
 
