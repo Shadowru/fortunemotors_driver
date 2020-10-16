@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
 
         while (ros::ok()) {
 
-            fortunemotors.readMotorState();
+            fortunemotors.readMotorState(&motor_error);
 
             ros::spinOnce();
             rate.sleep();
