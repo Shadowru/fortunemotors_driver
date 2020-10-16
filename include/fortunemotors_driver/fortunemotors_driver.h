@@ -5,6 +5,9 @@
 #include <ros/ros.h>
 
 #include <modbus/modbus.h>
+#ifdef __arm__
+#include <wiringPi.h>
+#endif
 
 #include <geometry_msgs/Twist.h>
 #include <tf/transform_broadcaster.h>

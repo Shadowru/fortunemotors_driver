@@ -2,5 +2,8 @@
 
 int main(int argc, char **argv) {
     // Start ROS node.
-    ROS_INFO("Starting hoverboard_driver node");
+    ROS_INFO("Starting fortunemotors_driver node");
+
+
+
 }

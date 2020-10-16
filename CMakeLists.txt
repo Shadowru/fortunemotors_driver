@@ -58,6 +58,7 @@ target_link_libraries(
         ${PROJECT_NAME}_node
         ${catkin_LIBRARIES}
         modbus
+        -lwiringPi
 )
 
 ## Rename C++ executable without prefix
