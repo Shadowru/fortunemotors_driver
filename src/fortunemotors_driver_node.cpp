@@ -9,17 +9,6 @@ namespace fortunemotors_driver_node {
     class Fortunemotor {
     public:
         Fortunemotor(std::string serial_name) : serial_name_(serial_name) {
-//            serial_ = serial_new();
-//
-//            if (serial_open(serial_, serial_name.c_str(), 115200) < 0) {
-//                ROS_ERROR("serial_open(): %s\n", serial_errmsg(serial_));
-//                exit(1);
-//            }
-
-            /*
-            buffer_size = 50;
-            serial_input_waiting(serial_, &buffer_size);
-             */
 #ifdef __arm__
             if(wiringPiSetupGpio() < 0) { //use BCM2835 Pin number table
                 throw std::runtime_error("set wiringPi lib failed");
@@ -35,7 +24,6 @@ namespace fortunemotors_driver_node {
             if (mb == NULL) {
                 throw std::runtime_error("Unable to create the libmodbus context");
             }
-
 
             //TODO: DEVICE_ID
             modbus_set_slave(mb, 2);
@@ -61,16 +49,16 @@ namespace fortunemotors_driver_node {
             } else {
 
                 int idx = 0;
-                msg.V = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.I = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.Temp = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.Angle = (tab_reg[idx++] << 24) + (tab_reg[idx++] << 16) + (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.Speed = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.VectAngle = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.Vectpwm = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.A = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.B = (tab_reg[idx++] << 8) + tab_reg[idx++];
-                msg.C = (tab_reg[idx++] << 8) + tab_reg[idx++];
+                msg.V = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.I = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.Temp = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.Angle =  tab_reg[idx++] + (tab_reg[idx++] << 8) + (tab_reg[idx++]  << 116) + (tab_reg[idx++]  << 24);
+                msg.Speed = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.VectAngle = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.Vectpwm = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.A = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.B = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.C = tab_reg[idx++] + (tab_reg[idx++] << 8);
             }
 
             *error = false;
@@ -91,15 +79,12 @@ namespace fortunemotors_driver_node {
         }
 
         void close() {
-//            serial_close(serial_);
-            serial_free(serial_);
             modbus_close(mb);
             modbus_free(mb);
         };
 
     private:
         std::string serial_name_;
-        serial_t *serial_;
         modbus_t *mb;
     };
 
@@ -122,6 +107,9 @@ void velCallback(const geometry_msgs::Twist &vel) {
     if (fortunemotors_instance == NULL) {
         return;
     }
+
+
+
 }
 
 void publish_feedback(ros::Publisher odrive_pub, fortunemotors_driver::fortunemotor_msg msg) {
