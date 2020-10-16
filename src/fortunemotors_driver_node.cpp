@@ -34,7 +34,7 @@ namespace fortunemotors_driver_node {
 
         }
 
-        set_motor_speed(int device_id, int16_t speed){
+        void set_motor_speed(int device_id, int16_t speed){
             modbus_set_slave(mb, device_id);
             modbus_flush(mb);
             std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
