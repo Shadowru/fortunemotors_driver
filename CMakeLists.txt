@@ -54,7 +54,11 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME}_node src/fortunemotors_driver_node.cpp src/serial.c)
-target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
+target_link_libraries(
+        ${PROJECT_NAME}_node
+        ${catkin_LIBRARIES}
+        modbus
+)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
