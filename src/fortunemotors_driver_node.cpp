@@ -39,7 +39,11 @@ namespace fortunemotors_driver_node {
             //TODO: config
             startWrite();
             set_motor_mode(1, MODE_SPEED);
+            set_motor_speed_PID_P(1);
+            set_motor_speed_PID_I(1);
             set_motor_mode(2, MODE_SPEED);
+            set_motor_speed_PID_P(2);
+            set_motor_speed_PID_I(2);
             endWrite();
         }
 
@@ -50,11 +54,11 @@ namespace fortunemotors_driver_node {
             write_register(device_id, 3, speed);
         }
 
-        void set_motor_speed_PID_P(device_id){
+        void set_motor_speed_PID_P(int device_id){
             write_register(device_id, 13, 100);
         }
 
-        void set_motor_speed_PID_I(device_id){
+        void set_motor_speed_PID_I(int device_id){
             write_register(device_id, 12, 100);
         }
 
