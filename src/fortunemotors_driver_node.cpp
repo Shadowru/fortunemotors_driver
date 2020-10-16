@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
 
     ros::init(argc, argv, "fortunemotors_driver");
     ros::NodeHandle node;
-    ros::Rate rate(1);  // 50 hz
+    ros::Rate rate(10);  // 50 hz
 
     std::string fortunemotors_uart;
 
