@@ -40,7 +40,8 @@ namespace fortunemotors_driver_node {
             //TODO: DEVICE_ID
             modbus_set_slave(ctx, 2);
             if (modbus_connect(ctx) == -1) {
-                throw std::runtime_error(modbus_strerror(errno));
+                throw std::runtime_error("Connection failed");
+                close();
             }
 
         }
