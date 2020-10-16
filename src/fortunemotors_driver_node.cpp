@@ -226,7 +226,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     // m per sec
     float vr = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
-    float vl = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
+    float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
     float vl_speed_val = (steps_per_mm * vl) / 10;
     float vr_speed_val = (steps_per_mm * vr) / 10;
