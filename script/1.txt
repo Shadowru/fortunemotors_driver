@@ -1,0 +1,5 @@
+roslaunch fortunemotors_driver fortunemotors_driver.launch
+
+rostopic echo /fortunemotor_msg
+
+rostopic hz /fortunemotor_msg
