@@ -59,7 +59,7 @@ namespace fortunemotors_driver_node {
                 msg.V1 = tab_reg[idx++];
                 msg.I1 = tab_reg[idx++];
                 msg.Temp1 = tab_reg[idx++];
-                msg.Angle1 =  tab_reg[idx++] + (tab_reg[idx++] << 16);
+                msg.Angle1 = tab_reg[idx++] + (tab_reg[idx++] << 16);
                 msg.Speed1 = tab_reg[idx++];
                 msg.VectAngle1 = tab_reg[idx++];
                 msg.Vectpwm1 = tab_reg[idx++];
@@ -87,7 +87,7 @@ namespace fortunemotors_driver_node {
                 msg.V2 = tab_reg[idx++];
                 msg.I2 = tab_reg[idx++];
                 msg.Temp2 = tab_reg[idx++];
-                msg.Angle2 =  tab_reg[idx++] + (tab_reg[idx++] << 16);
+                msg.Angle2 = tab_reg[idx++] + (tab_reg[idx++] << 16);
                 msg.Speed2 = tab_reg[idx++];
                 msg.VectAngle2 = tab_reg[idx++];
                 msg.Vectpwm2 = tab_reg[idx++];
@@ -144,7 +144,6 @@ void velCallback(const geometry_msgs::Twist &vel) {
     }
 
 
-
 }
 
 void publish_feedback(ros::Publisher odrive_pub, fortunemotors_driver::fortunemotor_msg msg) {
@@ -198,11 +197,7 @@ int main(int argc, char **argv) {
 
             fortunemotors_driver::fortunemotor_msg feedback = fortunemotors.read_motor_state(&motor_error);
 
-            if(motor_error){
-
-            } else {
-                publish_feedback(fortunemotor_pub, feedback);
-            }
+            publish_feedback(fortunemotor_pub, feedback);
 
             ros::spinOnce();
             rate.sleep();
