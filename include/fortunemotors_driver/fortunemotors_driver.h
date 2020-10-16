@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <exception>
+
 #include <ros/ros.h>
 
 #include <modbus/modbus.h>

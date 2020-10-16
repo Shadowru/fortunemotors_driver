@@ -23,10 +23,10 @@ namespace fortunemotors_driver_node {
 
 #ifdef __arm__
             if(wiringPiSetupGpio() < 0) { //use BCM2835 Pin number table
-                printf("set wiringPi lib failed !!! \r\n");
-                return -1;
+                ROSERROR("set wiringPi lib failed !!! \r\n");
+                throw std::exception("set wiringPi lib failed");
             } else {
-                printf("set wiringPi lib success !!! \r\n");
+                ROSINFO("set wiringPi lib success !!! \r\n");
             }
 
             pinMode(EN_485, OUTPUT);
@@ -74,7 +74,11 @@ int main(int argc, char **argv) {
 
     node.param<std::string>("fortunemotors_uart", fortunemotors_uart, "/dev/ttyS0");
 
-    fortunemotors_driver_node::Fortunemotor fortunemotors(fortunemotors_uart);
+    try {
+        fortunemotors_driver_node::Fortunemotor fortunemotors(fortunemotors_uart);
+    } catch (const std::exception& err) {
+        //ROSERROR();
+    }
 
     setInstance(&fortunemotors);
 
@@ -108,6 +112,6 @@ int main(int argc, char **argv) {
         rate.sleep();
     }
 
-    hoverboard.close();
+    fortunemotors.close();
 
 }
