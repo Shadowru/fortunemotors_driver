@@ -115,6 +115,10 @@ namespace fortunemotors_driver_node {
                 msg.A1 = tab_reg[idx++];
                 msg.B1 = tab_reg[idx++];
                 msg.C1 = tab_reg[idx++];
+
+                modbus_read_registers(mb, 29, 1, tab_reg);
+                msg.error1 = tab_reg[0];
+
             }
 
             modbus_set_slave(mb, 2);
@@ -145,6 +149,8 @@ namespace fortunemotors_driver_node {
                 msg.A2 = tab_reg[idx++];
                 msg.B2 = tab_reg[idx++];
                 msg.C2 = tab_reg[idx++];
+                modbus_read_registers(mb, 29, 1, tab_reg);
+                msg.error2 = tab_reg[0];
             }
 
             *error = false;
