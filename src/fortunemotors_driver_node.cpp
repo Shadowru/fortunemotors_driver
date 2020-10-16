@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
     // Start ROS node.
     ROS_INFO("Starting fortunemotors_driver node");
 
-    ros::init(argc, argv, "hoverboard_driver");
+    ros::init(argc, argv, "fortunemotors_driver");
     ros::NodeHandle node;
     ros::Rate rate(50);  // 50 hz
 
