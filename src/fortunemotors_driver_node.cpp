@@ -51,20 +51,21 @@ namespace fortunemotors_driver_node {
                 int i = 0;
 
                 for (i=0; i < rc; i++) {
-                    ROS_INFO("reg[%d]=%d (0x%X)\n", i, tab_reg[i], tab_reg[i]);
+                    ROS_INFO("reg[%d]=%d (0x%X)", i, tab_reg[i], tab_reg[i]);
                 }
+                ROS_INFO("\n");
 
                 int idx = 0;
-                msg.V = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.I = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.Temp = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.Angle =  tab_reg[idx++] + (tab_reg[idx++] << 8) + (tab_reg[idx++]  << 16) + (tab_reg[idx++]  << 24);
-                msg.Speed = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.VectAngle = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.Vectpwm = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.A = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.B = tab_reg[idx++] + (tab_reg[idx++] << 8);
-                msg.C = tab_reg[idx++] + (tab_reg[idx++] << 8);
+                msg.V = tab_reg[idx++];
+                msg.I = tab_reg[idx++];
+                msg.Temp = tab_reg[idx++];
+                msg.Angle =  tab_reg[idx++] + (tab_reg[idx++] << 16);
+                msg.Speed = tab_reg[idx++];
+                msg.VectAngle = tab_reg[idx++];
+                msg.Vectpwm = tab_reg[idx++];
+                msg.A = tab_reg[idx++];
+                msg.B = tab_reg[idx++];
+                msg.C = tab_reg[idx++];
             }
 
             *error = false;
