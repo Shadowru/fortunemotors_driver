@@ -34,6 +34,18 @@ namespace fortunemotors_driver_node {
 
         }
 
+        set_motor_speed(int device_id, int16_t speed){
+            modbus_set_slave(mb, device_id);
+            modbus_flush(mb);
+            std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
+
+            int res = modbus_write_register(mb, 3, speed);
+
+            if(res < 0){
+                ROS_ERROR("Error write speed to modbus device %d", device_id);
+            }
+        }
+
         fortunemotors_driver::fortunemotor_msg read_motor_state(bool *error) {
             uint16_t tab_reg[64];
 
@@ -158,9 +170,14 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
     float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
 
-    float vl_speed_val = (steps_per_mm * vr) / 10;
+    float vl_speed_val = (steps_per_mm * vl) / 10;
+    float vr_speed_val = (steps_per_mm * vr) / 10;
 
     ROS_INFO("vl_speed_val %f", vl_speed_val);
+    ROS_INFO("vr_speed_val %f", vr_speed_val);
+
+    fortunemotors_instance.set_motor_speed(1, static_cast<int16_t>(vl_speed_val);
+    fortunemotors_instance.set_motor_speed(2, static_cast<int16_t>vr_speed_val);
 
 }
 
