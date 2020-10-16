@@ -9,12 +9,12 @@ namespace fortunemotors_driver_node {
     class Fortunemotor {
     public:
         Fortunemotor(std::string serial_name) : serial_name_(serial_name) {
-            serial_ = serial_new();
-
-            if (serial_open(serial_, serial_name.c_str(), 115200) < 0) {
-                ROS_ERROR("serial_open(): %s\n", serial_errmsg(serial_));
-                exit(1);
-            }
+//            serial_ = serial_new();
+//
+//            if (serial_open(serial_, serial_name.c_str(), 115200) < 0) {
+//                ROS_ERROR("serial_open(): %s\n", serial_errmsg(serial_));
+//                exit(1);
+//            }
 
             /*
             buffer_size = 50;
@@ -28,6 +28,21 @@ namespace fortunemotors_driver_node {
             }
 #endif
             startRead();
+
+
+            mb = modbus_new_rtu(serial_name, 115200, 'N', 8, 1);
+
+            if (ctx == NULL) {
+                throw std::runtime_error("Unable to create the libmodbus context");
+            }
+
+
+            //TODO: DEVICE_ID
+            modbus_set_slave(ctx, 2);
+            if (modbus_connect(ctx) == -1) {
+                throw std::runtime_error(modbus_strerror(errno));
+            }
+
         }
 
         void startRead(){
@@ -45,14 +60,15 @@ namespace fortunemotors_driver_node {
         }
 
         void close() {
-            serial_close(serial_);
+//            serial_close(serial_);
             serial_free(serial_);
+            modbus_free(mb);
         };
 
     private:
         std::string serial_name_;
         serial_t *serial_;
-
+        modbus_t *mb;
     };
 
 }
