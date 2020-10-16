@@ -225,8 +225,8 @@ void velCallback(const geometry_msgs::Twist &vel) {
     float w = vel.angular.z;
 
     // m per sec
-    float vr = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
-    float vl = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
+    float vr = ((2.0 * v) + (-1.0 * w * base_width)) / (2.0 * wheel_radius);
+    float vl = ((2.0 * v) + (w * base_width)) / (2.0 * wheel_radius);
 
     float vl_speed_val = (steps_per_mm * vl) / 10;
     float vr_speed_val = (steps_per_mm * vr) / 10;
@@ -236,7 +236,7 @@ void velCallback(const geometry_msgs::Twist &vel) {
 
     fortunemotors_instance->startWrite();
     fortunemotors_instance->set_motor_speed(2, static_cast<int16_t>(vr_speed_val));
-    fortunemotors_instance->set_motor_speed(1, static_cast<int16_t>(-1 * vl_speed_val));
+    fortunemotors_instance->set_motor_speed(1, static_cast<int16_t>(vl_speed_val));
     fortunemotors_instance->endWrite();
 
 }
